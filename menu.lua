@@ -28,12 +28,12 @@ local scene = composer.newScene()
     
     slog =display.newImageRect("cobra.png",600,600)
     slog.x=120
-	slog.y=140
+	  slog.y=140
 
 
 	butstart:addEventListener("tap",iniciar)
 	butsair:addEventListener("tap",fecharjogo)
-	
+	butrecord:addEventListener("tap",record)
 
 	
 
@@ -49,7 +49,7 @@ local scene = composer.newScene()
    	
     butstart:removeEventListener("tap",iniciar)
     butsair:removeEventListener("tap",sair)
-
+    butrecord:removeEventListener("tap",record)
      deletartela()
    end
    
@@ -65,6 +65,14 @@ local scene = composer.newScene()
    
    	os.exit()
    end
+   
+
+   function record()
+  
+  composer.gotoScene( "record" )
+  composer.removeScene("menu")
+    
+    end
 
 
 	function iniciar()

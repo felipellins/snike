@@ -1,6 +1,7 @@
 
 local composer = require("composer")
 local scene = composer.newScene()
+bd=require("banco")
 
 local physics = require( "physics" )
 physics.start()
@@ -388,7 +389,7 @@ Pontuacao= display.newText("Pontos: "..cont,60,-30)
 					          end
 		    
 		         
-
+                 bd:adicionar(cont)
 		         composer.gotoScene("fimdejogo")
 		         composer.removeScene("jogo")
 		     end
@@ -499,7 +500,7 @@ function scene:destroy(event)
          display.remove(l2)
          display.remove(l3)
          display.remove(l4)
-         
+         display.remove(Pontuacao)         
        
 
      end 
