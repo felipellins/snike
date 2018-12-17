@@ -17,16 +17,16 @@ function scene:create(event)
 cobra=nil
 maca = nil
 reposicaoComidaAtiva = false
-cont=0;
-Pontuacao= display.newText("Pontos: "..cont,60,-30)
+pontuacao=0;
+Pontos = display.newText("Pontos: "..pontuacao,60,-30)
 
 
-
-
- 
+  Cobra={}
+  Maca={}
+  Jogo={}
 
 		-- essa função faz ela se movimentar inicialmente pra direita 
-		function movimentoInicial(event)
+		function Cobra:movimentoInicial(event)
 
 			if(cobra[1]~=nil)then
 
@@ -40,7 +40,7 @@ Pontuacao= display.newText("Pontos: "..cont,60,-30)
 
 
 		--  essa é a cabeç da cobra 
-		function criarcobra()
+		function Cobra:criarcobra()
 
 
 			cobra={}
@@ -50,47 +50,57 @@ Pontuacao= display.newText("Pontos: "..cont,60,-30)
 			cobra[1].y=100
 
 			physics.addBody(cobra[1], "dynamic")
-			cobra[1]:addEventListener("collision", alimentar)
+			cobra[1]:addEventListener("collision",alimentarCobra)
 			cobra[1].name="cobra"	
 
 		end
-       function mostrarPontuacao(cont)
+       function mostrarPontos(pontuacao)
        
-        Pontuacao.text ="Pontos: "..cont     
+        Pontos.text ="Pontos: "..pontuacao 
     
 
        end
 
 
-		function alimentar(event)
+		function alimentarCobra(event)
 			
 				 -- a colisão tem duas fazer inicio e termino , se nao tivesse o if 
 				 -- ele iriar chamar a função comer duas vezes. began e pro termino
-					 if (event.other.name == "macã")then
-						
-							if event.phase == "began" then
+					 if (event.other.name ~= "macã")then
+					
+
+							 finalizarjogo()
 								
 								-- inserer outro quadrado na cobra
-									
-						        table.insert(cobra,display.newImageRect("13.png",20,20))
-								-- enviar pontos
-								cont=cont+5	 
-								mostrarPontuacao(cont)
+								
+					  elseif(event.other.name=="macã")then
 
-								--- o rabinho nascer atraz da cobra
-								  cobra[#cobra].x = cobra[#cobra-1].x 
-								  cobra[#cobra].y = cobra[#cobra-1].y   		
-							  
-							 	   reposicionarComida()
-							 
-                           end         
 
-		            end
+									if event.phase == "began" then
+
+										rabo=display.newImageRect("13.png",20,20)	
+								        physics.addBody(rabo,"dynamic")
+								        rabo.name="rabo"
+								        table.insert(cobra,rabo)	
+
+										-- enviar pontos
+										pontuacao=pontuacao+5	 
+										mostrarPontos(pontuacao)
+
+										--- o rabinho nascer atraz da cobra
+										  cobra[#cobra].x = cobra[#cobra-1].x 
+										  cobra[#cobra].y = cobra[#cobra-1].y   		
+									  
+									 	   Maca.reposicionarComida()
+									 
+                                   end         
+
+		                end
 
 		 end
 
 
-		function reposicionarComida()
+		function Maca:reposicionarComida()
 
 			reposicaoComidaAtiva = true
 
@@ -108,7 +118,7 @@ Pontuacao= display.newText("Pontos: "..cont,60,-30)
 		end
 
 		    
-		function criarcomida()
+		function Maca:criarcomida()
 		  -- maca2={}
 
 		   -- essa função e pra criar maça aleatoria 
@@ -117,61 +127,55 @@ Pontuacao= display.newText("Pontos: "..cont,60,-30)
 		    maca.name = "macã"
 		    
 		   
-			 maca:addEventListener("collision", alimentar)
 
 		end
 
-		     
-		     	
-		     	-- body
-		   
-
 		 -- essa função quando chamada faz ela se mover pra cima 
-		function movimentarCima(event)
+		function Cobra:movimentarCima(event)
 			
 		     if(#cobra >0)then
 			-- cabeça
 			
 			  
-			  cobra[1].y = cobra[1].y - 5
+			  cobra[1].y = cobra[1].y - 10
 		    --  restante do corpo
 		                    -- aqui contem a direção
-		    movimentarCorpo(cobra[1].x, cobra[1].y)
+		    Cobra:movimentarCorpo(cobra[1].x, cobra[1].y)
 		  
 		    end
 		end
 		  
 		   
-		function movimentarBaixo(event)
+		function Cobra:movimentarBaixo(event)
 			 
 		   if(#cobra >0)then
 			
 			 
 				
-				cobra[1].y = cobra[1].y + 5
-				 movimentarCorpo(cobra[1].x, cobra[1].y)
+				cobra[1].y = cobra[1].y + 10
+				 Cobra:movimentarCorpo(cobra[1].x, cobra[1].y)
 		     
 		    end
 		end
 
-		function movimentarDireita(event)
+		function Cobra:movimentarDireita(event)
 			
 			if(#cobra >0)then
 			 
-			 cobra[1].x = cobra[1].x +5
-			 movimentarCorpo(cobra[1].x, cobra[1].y)
+			 cobra[1].x = cobra[1].x +10
+			 Cobra:movimentarCorpo(cobra[1].x, cobra[1].y)
              
 
 		      
 		   end
 		end
-		function movimentarEsquerda(event)
+		function Cobra:movimentarEsquerda(event)
 			
 		    if(#cobra >0)then
 
 		  
-			cobra[1].x = cobra[1].x -5
-		    movimentarCorpo(cobra[1].x, cobra[1].y)
+			cobra[1].x = cobra[1].x -10
+		    Cobra:movimentarCorpo(cobra[1].x, cobra[1].y)
 
 		     
 		    end	
@@ -179,191 +183,47 @@ Pontuacao= display.newText("Pontos: "..cont,60,-30)
 		end
 
 
-     --Tu tem que fazer o seguinte: faz a subtração e ve qual das
-   -- posicoes x ou y é 0 pra tu saber se ta mechendo na coluna ou na linha
-   --Sabendo se ta na linha ou coluna faz a conta com o outro valor pra 
-   --ver se ta indo pra cima ou pra baixo ou esquerda ou direita
-  -- Dica: faz um if pra coluna ou linha primeiro e depois v o lado em outro if
-    --Rodrigo:		 Ou seja 2 if pra cada
-     --Tipo se posX - auxX == 0 ta na coluna indo pra cima ou pra baixo
-		function movimentarCorpo(posX, posY)
+		function Cobra:movimentarCorpo(posX, posY)
 			local auxX, auxY
 			for i = 2, #cobra do
 				
 				auxX, auxY = cobra[i].x, cobra[i].y
                
-              if(auxX-posX ==0)then
-              --coluna
-				   
-				   if (auxY-posY < 0)then
-				   --cima
-				   cobra[i].y = posY+20
-				 
-                  end
-
-                   if(auxY-posY>0)then
-                   	-- baixo
-                   	cobra[i].y = posY-20
-                  
-				   end
-                   cobra[i].x=posX  
-				  
-              end
-
-				  if(auxY-posY ==0)then
-	               -- linha     
-	                    if(auxX-posX > 0)then
-	                    -- direita
-					    cobra[i].x = posX -20
-	                    
-	                    end     
-	                    if(auxX-posX <0)then
-	                   -- esquerda
-	                    cobra[i].x = posX +20
-	                    
-	                    end
-	                
-	               cobra[i].y = auxY
-	               end
+                 cobra[i].x = posX
+                 cobra[i].y = posY
 
 
-                   posX=auxX
-	               posY=auxY
+                 posX=auxX
+	             posY=auxY
 
 	    	end
            
 
-		end	
-			
-
-
-
-
-
-
-
-			-- -- A cobra é um vetor
-			-- if #cobra > 1 then									  
-							
-			-- 				if(direcao=="butesquer")then
-
-		 --                   -- posXAnterior = cobra[1].x
-			-- 		       -- posYAnterior = cobra[1].y	
-			-- 				--cobra[i].x =posXAnterior+20
-			-- 				--cobra[i].y =posYAnterior
-
-		 --                   for i=2, #cobra do
-
-		 --                   cobra[i].x = cobra[i-1].x+20  -- cabeça menos ela 
-			-- 			   cobra[i].y = cobra[i-1].y   -- cabeça menos ela 							
-							
-		 --                  end
-
-		 --                 end
-							
-		              
-		 --               for i=2, #cobra do
-
-		     
-		 --                   if(direcao=="butdirei")then
-		                     
-		 --                         cobra[i].x = cobra[i-1].x-20     -- cabeça menos ela 
-			-- 			         cobra[i].y = cobra[i-1].y    -- cabeça menos ela 
-					       
-			-- 		      -- posXAnterior = cobra[i-1].x
-			-- 		      -- posYAnterior = cobra[i-1].y
-
-			-- 		      -- cobra[i].x = posXAnterior-20
-			-- 			  -- cobra[i].y = posYAnterior
-
-		 --                 end     
-		 --              end
-		                   
-		                  
-		 --                 for i=2, #cobra do
-
-		 --                    if(direcao=="butcim")then
-		 --                   cobra[i].x = cobra[i-1].x    -- cabeça menos ela 
-			-- 			   cobra[i].y = cobra[i-1].y+20    -- cabeça menos ela 
-
-			-- 				-- posXAnterior = cobra[i-1].x
-			-- 		         --posYAnterior = cobra[i-1].y
-
-					     
-		 --                   -- cobra[i].x = posXAnterior
-			-- 			   -- cobra[i].y = posYAnterior+20
-					     
-					
-		 --                  end
-
-		 --             end
-
-		 --             for i=2, #cobra do
-		                   
-		 --                    if(direcao=="butbai")then
-		                   
-
-		 --                    cobra[i].x = cobra[i-1].x     -- cabeça menos ela 
-			-- 				cobra[i].y = cobra[i-1].y-20    -- cabeça menos ela 
-					
-					     
-			-- 		      --  posXAnterior = cobra[i-1].x
-			-- 		      --  posYAnterior = cobra[i-1].y
-
-			-- 		       -- cobra[i].x = posXAnterior
-			-- 				--cobra[i].y = posYAnterior-20
-		     
-		 --              end
-
-		 --                    end
-
-
-
-		 --             --   posXAnterior = 0   -- guardar posição
-			-- 		 --  posYAnterior = 0   -- guardar posição
-
-
-
-			-- 		--	else
-			-- 		--		cobra[i].x = cobra[posXAnterior].x-20
-			-- 		--		cobra[i].y = cobra[posYAnterior].y-20
-							
-
-			-- 		--	
-
-			-- 			--end
-
-					
-
-
-			-- end
-
-		
-
+		end				
 
 		function movimentarCobra(event)
 
 			if(event.target.name=="butesquer")then
 
 				timer.pause(movimentoIn)
-				movimentoIn = timer.performWithDelay(100,movimentarEsquerda,0)
+				movimentoIn = timer.performWithDelay(100,Cobra.movimentarEsquerda,0)
 			    -- movimentoIn.param = event.target.name
 
 				elseif(event.target.name=="butdirei")then
 
 					timer.pause(movimentoIn)
-					movimentoIn = timer.performWithDelay(100,movimentarDireita,0)
+					movimentoIn = timer.performWithDelay(100,Cobra.movimentarDireita,0)
 		           -- movimentoIn.param = event.target.name
 					
 					elseif(event.target.name=="butcim")then
 
 						timer.pause(movimentoIn)
-						movimentoIn = timer.performWithDelay(100,movimentarCima,0)
+						movimentoIn = timer.performWithDelay(100,Cobra.movimentarCima,0)
 		               	-- movimentoIn.param = event.target.name
 
 						elseif(event.target.name=="butbai")then
 							timer.pause(movimentoIn)
-							movimentoIn= timer.performWithDelay(100,movimentarBaixo,0)
+							movimentoIn= timer.performWithDelay(100,Cobra.movimentarBaixo,0)
 		                 	-- movimentoIn.param = event.target.name
 						
 						end
@@ -375,7 +235,7 @@ Pontuacao= display.newText("Pontos: "..cont,60,-30)
 		  function  finalizarjogo (event)
 		  			         
 					
-						 if(event.other.name ~="maçã")then
+					
 
 						     display.remove(maca)
 						     timer.pause(movimentoIn)
@@ -389,15 +249,16 @@ Pontuacao= display.newText("Pontos: "..cont,60,-30)
 					          end
 		    
 		         
-                 bd:adicionar(cont)
+                 bd:inserir(pontuacao)
+                 print(pontuacao)
 		         composer.gotoScene("fimdejogo")
 		         composer.removeScene("jogo")
-		     end
+		  
 
 		   end
 
 
-		  function  criarlinhas(event)
+		  function  Jogo:criarlinhas(event)
 		  	
 		  	  -- linhas horizontais
 		  	  l1= display.newLine(0,-40,2*w,-40)    
@@ -426,22 +287,14 @@ Pontuacao= display.newText("Pontos: "..cont,60,-30)
 		    --l4.strokeWidth = 2
 		    physics.addBody(l4,"static")
 		    l4.name="linha"  
-
-
-		    l1:addEventListener("collision",finalizarjogo)
-			l2:addEventListener("collision", finalizarjogo)
-		    l3:addEventListener("collision", finalizarjogo)
-		    l4:addEventListener("collision",finalizarjogo)
-
 		   
-
 		 
 
 		end
 
 
 
-		function criarbutoes(event)
+		function Jogo:criarbutoes(event)
 			
 		    fundo =display.newImageRect("fundo.png",400,800)
             fundo.x=120
@@ -477,12 +330,12 @@ Pontuacao= display.newText("Pontos: "..cont,60,-30)
 
 		end
 
-		criarcomida()
-		criarbutoes()
+		 Maca.criarcomida()
+		 Jogo.criarbutoes()
 
-		movimentoIn=  timer.performWithDelay(100,movimentoInicial,0)
-		criarcobra()
-		criarlinhas()
+		movimentoIn=  timer.performWithDelay(100,Cobra.movimentoInicial,0)
+		Cobra.criarcobra()
+		Jogo.criarlinhas()
 
  
 
@@ -500,7 +353,7 @@ function scene:destroy(event)
          display.remove(l2)
          display.remove(l3)
          display.remove(l4)
-         display.remove(Pontuacao)         
+         display.remove(Pontos)         
        
 
      end 

@@ -7,44 +7,46 @@ local h = display.contentHeight
 
 function scene:create( event )
 
-	
-	    local li1 = display.newLine(1,0,1,265)
+      fundo =display.newImageRect("fundo.png",400,800)
+      fundo.x=120
+      fundo.y=140
+  
+      local li1 = display.newLine(1,0,1,265)
       local li2 = display.newLine(w-1,0,w-1,265)
-      local li3 = display.newLine(w/2,0,w/2,265)
       local lih1 = display.newLine(0,0,w,0)
       local lih2 = display.newLine(0,30,w,30)
       local lih3 = display.newLine(0,70,w,70)
-      local lih4 = display.newLine(0,120,w,120)
-      local lih5 = display.newLine(0,170,w,170)
-      local lih6 = display.newLine(0,215,w,215)
-      local lih7 = display.newLine(0,265,w,265)
+     -- local lih4 = display.newLine(0,120,w,120)
+      --local lih5 = display.newLine(0,170,w,170)
+      --local lih6 = display.newLine(0,215,w,215)
+     -- local lih7 = display.newLine(0,265,w,265)
 
 
-        butaomenu = display.newImageRect("menu.png",120,120) 
-        butaomenu.x = w/2
-        butaomenu.y = 330
+        butmenu = display.newImageRect("menu.png",120,120) 
+        butmenu.x = w/2
+        butmenu.y = 330
         
-        butaomenu:addEventListener("tap",menu)
+        butmenu:addEventListener("tap",menu)
 
-        rankigText = display.newText("Ranking",display.contentCenterX*0.5,15)
-        pontuacaoText = display.newText("Pontuação",display.contentCenterX*1.5,15)
+        recordText = display.newText("Melhor",display.contentCenterX*0.5,15)
+        pontosText = display.newText("Pontuação",display.contentCenterX*1.5,15)
 
-       -- local mostrarId = bd:pegarId()
+       -- local mostrarid = bd:pegarId()
        
 
        
-        local mostrarPontos = bd:pegarCont()
+        local mostrarPontos = bd:pegarPontuacao()
         print("pegou")
 
-        local y = 50
+       local y = 50
 
-        for n=1,5 do
+       local  n=1
 
-            rankigValor = display.newText(n.."º",display.contentCenterX*0.5,y)
+            recordValor = display.newText(n.."º",display.contentCenterX*0.5,y)
             
            
-          y = y + 50
-        end
+        local  y = y + 50
+       -- end
 
 
         local y1 = 50
@@ -52,13 +54,13 @@ function scene:create( event )
         for k,v in pairs(mostrarPontos) do
           for k1,v1 in pairs(v) do
 
-            pontuacaoValor = display.newText(v1,display.contentCenterX*1.5,y1)
+            todosvalores = display.newText(v1,display.contentCenterX*1.5,y1)
             print(k1,v1)
            
           end
           y1 = y1 + 50
         end
-
+  
 
 
 end
@@ -66,7 +68,7 @@ end
 
 function scene:destroy( event )
 
-	   
+     
         display.remove(li1)
         display.remove(li2)
         display.remove(li3)
@@ -77,20 +79,26 @@ function scene:destroy( event )
         display.remove(lih5)
         display.remove(lih6)
         display.remove(lih7)
+      --  deletartela( )
+          display.remove(butmenu)
+           display.remove(pontosText)
+           display.remove(todosvalores)
+              display.remove(recordText)
+              display.remove(recordValor) 
 
-          display.remove(butaomenu)
-           display.remove(pontuacaoText)
-            display.remove(pontuacaoValor)
-              display.remove(rankigText)
-              display.remove(rankigValor)   
 
 end
 
-
 function menu()
-	composer.removeScene("record")
-	composer.gotoScene( "menu" )
+  
+  composer.gotoScene( "menu" )
+  composer.removeScene("record")
 
+end
+
+function deletartela( )
+
+               
 end
 
 

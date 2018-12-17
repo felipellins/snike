@@ -1,46 +1,47 @@
 local bancoDados = {}
 
-require("sqlite3")
-local  caminho = system.pathForFile("dados.db",system.DocumentsDirectory)
-local  banco = sqlite3.open(caminho)
+local  sqlite3 = require("sqlite3")
+local  estrada = system.pathForFile("dados.db",system.DocumentsDirectory)
+local  banco = sqlite3.open(estrada)
 
 
-local tabela = [[CREATE TABLE IF NOT EXISTS tabpontuacao(cont NOT NULL);]]
+local tabela = [[CREATE TABLE IF NOT EXISTS tabelaPontuac(pontuacao NOT NULL);]]
 banco:exec(tabela)
 
---local remover = [[DELETE FROM tabelaPontuacao]]
+--local remover = [[DELETE FROM tabelaPontuac]]
 --banco:exec(remover)
 
-function bancoDados:adicionar( cont )
+function bancoDados:inserir( pontuacao )
 
 
-	if #mostrarPontos < 4 then
+	if #mostrarPontuacao < 5 then
 
-	--local insert = [[INSERT INTO tabpontuacao (cont) VALUES (]] ..cont.. [[);]]
-        local  a= [[ INSERT INTO tabpontuacao VALUES (NULL, cont)]];
-	
-	banco:exec(a)
-		    print(cont)
+
+
+	local consulta = [[INSERT INTO tabelaPontuac(pontuacao) VALUES (]] ..pontuacao.. [[);]]
+   
+	banco:exec(consulta)
+		
 end
 
 end
 
-mostrarPontos = {}
+mostrarPontuacao = {}
 
 
-function bancoDados:pegarCont()
-  print("entrouco")
+function bancoDados:pegarPontuacao()
 
-   for lin in banco:nrows("SELECT * FROM tabpontuacao ") do
+
+   for linha in banco:nrows("SELECT pontuacao, MAX(pontuacao) AS 'max_pontuacao' FROM tabelaPontuac ;") do
 	
-    
-     mostrarPontos[#mostrarPontos+1] = 
-   { a = lin.cont }
 
+     mostrarPontuacao[#mostrarPontuacao+1] =  { pontuacao = linha.pontuacao }
+
+  
 
  end
 
-return mostrarPontos
+return mostrarPontuacao
 
 end
 

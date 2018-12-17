@@ -8,7 +8,7 @@ local scene = composer.newScene()
   		
     fundo =display.newImageRect("fundo.png",400,800)
     fundo.x=120
-	fundo.y=140
+	  fundo.y=140
 
 	butstart =display.newImageRect("start.png",120,120)
 	butstart.name="butrecord"
@@ -68,9 +68,9 @@ local scene = composer.newScene()
    
 
    function record()
-  
-  composer.gotoScene( "record" )
   composer.removeScene("menu")
+  composer.gotoScene( "record" )
+  
     
     end
 
