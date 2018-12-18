@@ -7,7 +7,7 @@ local physics = require( "physics" )
 physics.start()
 physics.setGravity(0,0)
 --physics.setDrawMode("hybrid")
-  
+  -- o nome do evento coloca na função
 function scene:create(event)	
  
 
@@ -30,7 +30,7 @@ Pontos = display.newText("Pontos: "..pontuacao,60,-30)
 
 			if(cobra[1]~=nil)then
 
-				cobra[1].x=cobra[1].x+5
+				cobra[1].x=cobra[1].x+10
 
 			else
 				timer.cancel(movimentoIn)
@@ -45,12 +45,12 @@ Pontos = display.newText("Pontos: "..pontuacao,60,-30)
 
 			cobra={}
 
-			cobra[1] = display.newImageRect("1.png",25,25)
+			cobra[1] = display.newImageRect("13.png",25,25)
 			cobra[1].x=80
 			cobra[1].y=100
 
 			physics.addBody(cobra[1], "dynamic")
-			cobra[1]:addEventListener("collision",alimentarCobra)
+			cobra[1]:addEventListener("collision",Cobra)
 			cobra[1].name="cobra"	
 
 		end
@@ -62,7 +62,7 @@ Pontos = display.newText("Pontos: "..pontuacao,60,-30)
        end
 
 
-		function alimentarCobra(event)
+		function Cobra:collision(event)
 			
 				 -- a colisão tem duas fazer inicio e termino , se nao tivesse o if 
 				 -- ele iriar chamar a função comer duas vezes. began e pro termino
@@ -71,28 +71,38 @@ Pontos = display.newText("Pontos: "..pontuacao,60,-30)
 
 							 finalizarjogo()
 								
-								-- inserer outro quadrado na cobra
+							
 								
 					  elseif(event.other.name=="macã")then
 
 
 									if event.phase == "began" then
 
-										rabo=display.newImageRect("13.png",20,20)	
-								        physics.addBody(rabo,"dynamic")
-								        rabo.name="rabo"
-								        table.insert(cobra,rabo)	
+										
 
+										rabo=display.newImageRect("13.png",20,20)	
+								       
+								        physics.addBody(rabo,"dynamic")
+								      
+								       -- inserer outro quadrado na cobra
+								        rabo.name="rabo"
+								        table.insert(cobra,rabo)
+								        
+                                  
 										-- enviar pontos
 										pontuacao=pontuacao+5	 
 										mostrarPontos(pontuacao)
 
 										--- o rabinho nascer atraz da cobra
-										  cobra[#cobra].x = cobra[#cobra-1].x 
+										  cobra[#cobra].x = cobra[#cobra-1].x
 										  cobra[#cobra].y = cobra[#cobra-1].y   		
 									  
 									 	   Maca.reposicionarComida()
 									 
+
+
+
+
                                    end         
 
 		                end
@@ -133,7 +143,7 @@ Pontos = display.newText("Pontos: "..pontuacao,60,-30)
 		 -- essa função quando chamada faz ela se mover pra cima 
 		function Cobra:movimentarCima(event)
 			
-		     if(#cobra >0)then
+		     if(#cobra >0 )then
 			-- cabeça
 			
 			  
@@ -152,7 +162,7 @@ Pontos = display.newText("Pontos: "..pontuacao,60,-30)
 			
 			 
 				
-				cobra[1].y = cobra[1].y + 10
+				 cobra[1].y = cobra[1].y + 10
 				 Cobra:movimentarCorpo(cobra[1].x, cobra[1].y)
 		     
 		    end
@@ -182,7 +192,7 @@ Pontos = display.newText("Pontos: "..pontuacao,60,-30)
 
 		end
 
-
+    -- essa função faz o copo se movimentar atras da cabeça
 		function Cobra:movimentarCorpo(posX, posY)
 			local auxX, auxY
 			for i = 2, #cobra do
@@ -201,7 +211,9 @@ Pontos = display.newText("Pontos: "..pontuacao,60,-30)
 
 		end				
 
-		function movimentarCobra(event)
+
+              -- essa função é para definir a direção de acordo com o butão a ser apertado
+		function Cobra:tap(event)
 
 			if(event.target.name=="butesquer")then
 
@@ -248,9 +260,11 @@ Pontos = display.newText("Pontos: "..pontuacao,60,-30)
 					     
 					          end
 		    
-		         
+		         -- inserir´pontuação no banco
                  bd:inserir(pontuacao)
                  print(pontuacao)
+
+                 --chamar  a tela fim de jogo em seguida remover a tela jogo
 		         composer.gotoScene("fimdejogo")
 		         composer.removeScene("jogo")
 		  
@@ -321,10 +335,10 @@ Pontos = display.newText("Pontos: "..pontuacao,60,-30)
 			butbaixo.x=150
 			butbaixo.y=450
 
-			butesquerda:addEventListener("tap",movimentarCobra)
-			butdireita :addEventListener("tap",movimentarCobra)
-			butcima:addEventListener("tap",movimentarCobra)
-			butbaixo:addEventListener("tap",movimentarCobra)
+			butesquerda:addEventListener("tap",Cobra)
+			butdireita :addEventListener("tap",Cobra)
+			butcima:addEventListener("tap",Cobra)
+			butbaixo:addEventListener("tap",Cobra)
 
 		  
 

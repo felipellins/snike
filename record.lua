@@ -16,10 +16,7 @@ function scene:create( event )
       local lih1 = display.newLine(0,0,w,0)
       local lih2 = display.newLine(0,30,w,30)
       local lih3 = display.newLine(0,70,w,70)
-     -- local lih4 = display.newLine(0,120,w,120)
-      --local lih5 = display.newLine(0,170,w,170)
-      --local lih6 = display.newLine(0,215,w,215)
-     -- local lih7 = display.newLine(0,265,w,265)
+     
 
 
         butmenu = display.newImageRect("menu.png",120,120) 
@@ -46,7 +43,7 @@ function scene:create( event )
             
            
         local  y = y + 50
-       -- end
+       
 
 
         local y1 = 50
