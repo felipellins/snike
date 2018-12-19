@@ -1,4 +1,3 @@
-
 local composer = require("composer")
 local scene = composer.newScene()
 bd=require("banco")
@@ -62,51 +61,77 @@ Pontos = display.newText("Pontos: "..pontuacao,60,-30)
        end
 
 
+
+
+       function fisica()
+       	if rabo ~= nil then
+       		physics.addBody(rabo,"dynamic")
+       		rabo.isSensor = true
+       	end
+       end
+
+       function fisica2()
+       		physics.addBody(rabo2,"dynamic")
+       		rabo2.isSensor = true
+       end
+
+                
+	       		print("adicionou fisica")
+
+	    cont = 0
+
 		function Cobra:collision(event)
-			
+
+									
 				 -- a colisão tem duas fazer inicio e termino , se nao tivesse o if 
 				 -- ele iriar chamar a função comer duas vezes. began e pro termino
-					 if (event.other.name ~= "macã")then
-					
+	
+						if event.phase == "began" then
+							if event.other.name == "macã" then
 
-							 finalizarjogo()
-								
-							
-								
-					  elseif(event.other.name=="macã")then
+                             
+								rabo=display.newImageRect("13.png",20,20)
+								rabo.x = -50
+							    temp = timer.performWithDelay(10,fisica,1)
+
+							    rabo2=display.newImageRect("13.png",20,20)
+								rabo2.name = "rabo"
+								rabo2.x = -50
+								temp = timer.performWithDelay(10,fisica2,1)
 
 
-									if event.phase == "began" then
+								cont =  cont + 1
+								print("aqui",cont)
 
+								if cont<7 then
 										
+								--inserer outro quadrado na cobra
+								table.insert(cobra,rabo)
 
-										rabo=display.newImageRect("13.png",20,20)	
-								       
-								        physics.addBody(rabo,"dynamic")
-								      
-								       -- inserer outro quadrado na cobra
-								        rabo.name="rabo"
-								        table.insert(cobra,rabo)
-								        
-                                  
-										-- enviar pontos
-										pontuacao=pontuacao+5	 
-										mostrarPontos(pontuacao)
+								elseif cont>7 then
+									
+									table.insert(cobra,rabo2)
 
-										--- o rabinho nascer atraz da cobra
-										  cobra[#cobra].x = cobra[#cobra-1].x
-										  cobra[#cobra].y = cobra[#cobra-1].y   		
-									  
-									 	   Maca.reposicionarComida()
-									 
+								end
 
+								-- enviar pontos
+								pontuacao=pontuacao+5	 
+								mostrarPontos(pontuacao)
 
+								--- o rabinho nascer atraz da cobra
+								  cobra[#cobra].x = cobra[#cobra-1].x 
+								  cobra[#cobra].y = cobra[#cobra-1].y 		
+							  
+							 	   Maca.reposicionarComida()
 
+							elseif event.other.name == "rabo" then
+									finalizarjogo()
 
-                                   end         
-
-		                end
-
+						    elseif event.other.name == "linha" then
+									finalizarjogo()
+					end
+				end
+            		
 		 end
 
 
@@ -143,10 +168,11 @@ Pontos = display.newText("Pontos: "..pontuacao,60,-30)
 		 -- essa função quando chamada faz ela se mover pra cima 
 		function Cobra:movimentarCima(event)
 			
+			direcao = "cima"
+
 		     if(#cobra >0 )then
 			-- cabeça
-			
-			  
+
 			  cobra[1].y = cobra[1].y - 10
 		    --  restante do corpo
 		                    -- aqui contem a direção
@@ -158,9 +184,10 @@ Pontos = display.newText("Pontos: "..pontuacao,60,-30)
 		   
 		function Cobra:movimentarBaixo(event)
 			 
+				direcao = "baixo"
+
 		   if(#cobra >0)then
 			
-			 
 				
 				 cobra[1].y = cobra[1].y + 10
 				 Cobra:movimentarCorpo(cobra[1].x, cobra[1].y)
@@ -170,6 +197,8 @@ Pontos = display.newText("Pontos: "..pontuacao,60,-30)
 
 		function Cobra:movimentarDireita(event)
 			
+			direcao = "direita"
+
 			if(#cobra >0)then
 			 
 			 cobra[1].x = cobra[1].x +10
@@ -181,6 +210,8 @@ Pontos = display.newText("Pontos: "..pontuacao,60,-30)
 		end
 		function Cobra:movimentarEsquerda(event)
 			
+			direcao = "esquerda"
+
 		    if(#cobra >0)then
 
 		  
@@ -207,8 +238,6 @@ Pontos = display.newText("Pontos: "..pontuacao,60,-30)
 	             posY=auxY
 
 	    	end
-           
-
 		end				
 
 
@@ -217,31 +246,51 @@ Pontos = display.newText("Pontos: "..pontuacao,60,-30)
 
 			if(event.target.name=="butesquer")then
 
+				if direcao == "direita" and cont ~= 0 then
+					print(direcao)
+						finalizarjogo()
+
+				else 
+					print(cont)
 				timer.pause(movimentoIn)
 				movimentoIn = timer.performWithDelay(100,Cobra.movimentarEsquerda,0)
 			    -- movimentoIn.param = event.target.name
+			
+
+			end
 
 				elseif(event.target.name=="butdirei")then
 
+					if direcao == "esquerda" and cont ~= 0 then
+
+						print(direcao)
+						finalizarjogo()
+					else
 					timer.pause(movimentoIn)
 					movimentoIn = timer.performWithDelay(100,Cobra.movimentarDireita,0)
 		           -- movimentoIn.param = event.target.name
-					
-					elseif(event.target.name=="butcim")then
+					end
 
-						timer.pause(movimentoIn)
-						movimentoIn = timer.performWithDelay(100,Cobra.movimentarCima,0)
+					elseif(event.target.name=="butcim")then
+						if direcao == "baixo" and cont ~= 0 then
+						    print(direcao)
+							finalizarjogo()
+						else
+							timer.pause(movimentoIn)
+							movimentoIn = timer.performWithDelay(100,Cobra.movimentarCima,0)
 		               	-- movimentoIn.param = event.target.name
+		               end
 
 						elseif(event.target.name=="butbai")then
-							timer.pause(movimentoIn)
-							movimentoIn= timer.performWithDelay(100,Cobra.movimentarBaixo,0)
+							if direcao == "cima" and cont ~= 0 then
+								print(direcao)
+								finalizarjogo()
+							else
+								timer.pause(movimentoIn)
+								movimentoIn= timer.performWithDelay(100,Cobra.movimentarBaixo,0)
 		                 	-- movimentoIn.param = event.target.name
-						
+							end
 						end
-
-		        
-
 					end
 
 		  function  finalizarjogo (event)

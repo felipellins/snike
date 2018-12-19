@@ -7,6 +7,7 @@ local h = display.contentHeight
 
 function scene:create( event )
 
+    
       fundo =display.newImageRect("fundo.png",400,800)
       fundo.x=120
       fundo.y=140
@@ -42,20 +43,16 @@ function scene:create( event )
             recordValor = display.newText(n.."º",display.contentCenterX*0.5,y)
             
            
-        local  y = y + 50
-       
+        for p,v in pairs(mostrarPontos) do
+          for p1,v1 in pairs(v) do
 
+           
+            valores = display.newText(v1,display.contentCenterX*1.5,y)
+            print(p1,v1)
 
-        local y1 = 50
-
-        for k,v in pairs(mostrarPontos) do
-          for k1,v1 in pairs(v) do
-
-            todosvalores = display.newText(v1,display.contentCenterX*1.5,y1)
-            print(k1,v1)
            
           end
-          y1 = y1 + 50
+        
         end
   
 
@@ -65,37 +62,32 @@ end
 
 function scene:destroy( event )
 
-     
+    
         display.remove(li1)
-        display.remove(li2)
         display.remove(li3)
         display.remove(lih1)
         display.remove(lih2)
         display.remove(lih3)
-        display.remove(lih4)
-        display.remove(lih5)
-        display.remove(lih6)
-        display.remove(lih7)
-      --  deletartela( )
-          display.remove(butmenu)
+        
+         display.remove(butmenu)
            display.remove(pontosText)
-           display.remove(todosvalores)
+           display.remove(valores)
               display.remove(recordText)
               display.remove(recordValor) 
+             display.remove(v1) 
+             delete()
 
+end
 
+function delete()
+   display.remove(valores)
 end
 
 function menu()
   
-  composer.gotoScene( "menu" )
   composer.removeScene("record")
+  composer.gotoScene( "menu" )
 
-end
-
-function deletartela( )
-
-               
 end
 
 
